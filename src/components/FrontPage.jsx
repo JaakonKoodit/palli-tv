@@ -1,5 +1,5 @@
 import React from "react";
-import specialPages from "../data/specialPages.json";
+import specialPages from "../data/specialpages.json";
 
 function FrontPage({ newsList, setPage }) {
   const pinnedItem = newsList.find((item) => item.pinned);
