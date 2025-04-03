@@ -1,15 +1,46 @@
 import React from "react";
-import { useState } from "react";
-import newsData from "../data/news.json";
+import { useState, useEffect } from "react";
+import specialPages from "../data/specialPages.json";
+import { supabase } from "../lib/supabase";
 
 const getTodayDate = () => {
   return new Date().toISOString().split("T")[0];
 };
 
 function AdminPage() {
+  const [deletePageInput, setDeletePageInput] = useState("");
+  const [pendingDelete, setPendingDelete] = useState(null);
+  const [newsList, setNewsList] = useState([]);
+  const reservedPages = specialPages.map((p) => p.page);
+  const existingPinned = newsList.find((n) => n.pinned);
+  const [isEvent, setIsEvent] = useState(false);
+  const [editingPage, setEditingPage] = useState(null);
+  const [editInput, setEditInput] = useState("");
+
+  const initialFormState = {
+    title: "",
+    body: "",
+    page: null, // This will be dynamically set using getNextAvailablePage()
+    pinned: false,
+    date: getTodayDate(),
+    event_date: null,
+  };
+
+  const fetchNews = async () => {
+    const { data, error } = await supabase
+      .from("news")
+      .select("*")
+      .order("date", { ascending: false });
+
+    if (!error) setNewsList(data);
+  };
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
   const getNextAvailablePage = () => {
-    const reservedPages = [100, 110, 200, 765, 800];
-    const usedPages = newsData.map((item) => item.page);
+    const usedPages = newsList.map((item) => item.page);
 
     for (let i = 101; i <= 899; i++) {
       if (!usedPages.includes(i) && !reservedPages.includes(i)) {
@@ -26,16 +57,16 @@ function AdminPage() {
   const correctPassword = import.meta.env.VITE_ADMIN_PASSWORD;
 
   const [form, setForm] = useState({
-    title: "",
-    body: "",
-    page: getNextAvailablePage(),
-    pinned: false,
-    date: getTodayDate(),
+    ...initialFormState,
+    page: getNextAvailablePage(), // Dynamically set the initial page
   });
 
-  const [deletePageInput, setDeletePageInput] = useState("");
-  const [pendingDelete, setPendingDelete] = useState(null);
-  const [newsList, setNewsList] = useState(newsData);
+  useEffect(() => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      page: getNextAvailablePage(),
+    }));
+  }, [newsList]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -45,9 +76,44 @@ function AdminPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+
+    if (editingPage !== null) {
+      // Update existing post
+      const { error } = await supabase
+        .from("news")
+        .update(form)
+        .eq("page", editingPage);
+
+      if (error) {
+        alert("Päivitys epäonnistui");
+        console.error(error);
+      } else {
+        alert("Uutinen päivitetty ✅");
+        setEditingPage(null);
+        setForm({ ...initialFormState, page: getNextAvailablePage() }); // Reset form
+        setIsEvent(false);
+        fetchNews();
+      }
+      return;
+    }
+
+    // If this is pinned, unpin any existing one first
+    if (form.pinned) {
+      await supabase.from("news").update({ pinned: false }).eq("pinned", true);
+    }
+
+    const { error } = await supabase.from("news").insert([form]);
+
+    if (error) {
+      alert("Jokin meni pieleen 😢");
+      console.error(error);
+    } else {
+      alert("Uutinen lisätty ✅");
+      setForm({ ...initialFormState, page: getNextAvailablePage() }); // Reset form
+      fetchNews(); // Refetch live data after insert
+    }
   };
 
   if (!unlocked) {
@@ -78,7 +144,7 @@ function AdminPage() {
 
         <form onSubmit={handleSubmit}>
           <p>
-            Page: {getNextAvailablePage()}
+            Page: {form.page}
             {/*             <input
               type="number"
               name="page"
@@ -110,11 +176,92 @@ function AdminPage() {
               />
               Pinned?
             </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={isEvent}
+                onChange={(e) => {
+                  setIsEvent(e.target.checked);
+                  if (!e.target.checked) {
+                    setForm({ ...form, event_date: null });
+                  }
+                }}
+              />
+              Event?
+            </label>
           </p>
+
+          {isEvent && (
+            <p>
+              <label>
+                Päivämäärä:
+                <input
+                  type="date"
+                  value={form.event_date || ""}
+                  onChange={(e) =>
+                    setForm({ ...form, event_date: e.target.value })
+                  }
+                  required
+                />
+              </label>
+            </p>
+          )}
+
+          {form.pinned && existingPinned && (
+            <p style={{ color: "yellow", fontWeight: "bold" }}>
+              ⚠ Page {existingPinned.page} – {existingPinned.title} will be
+              unpinned.
+            </p>
+          )}
+
           <button type="submit" className="add-news-button">
             Lisää uutinen
           </button>
         </form>
+        <div style={{ marginTop: "2rem" }}>
+          <div className="headline">✏️ Muokkaa sivua</div>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              const pageNum = parseInt(editInput);
+              if (isNaN(pageNum)) return;
+
+              const { data, error } = await supabase
+                .from("news")
+                .select("*")
+                .eq("page", pageNum)
+                .single();
+
+              if (error || !data) {
+                alert("Sivua ei löytynyt");
+                return;
+              }
+
+              setEditingPage(pageNum);
+              setForm({
+                title: data.title,
+                body: data.body,
+                page: data.page,
+                date: data.date,
+                pinned: data.pinned,
+                event_date: data.event_date,
+              });
+              setIsEvent(!!data.event_date);
+            }}
+          >
+            <input
+              type="number"
+              placeholder="Sivunumero"
+              className="page-input-wide"
+              value={editInput}
+              onChange={(e) => setEditInput(e.target.value)}
+            />
+            <button type="submit" className="edit-button">
+              Hae
+            </button>
+          </form>
+        </div>
+
         <div style={{ marginTop: "2rem" }}>
           <div className="headline">🗑️ Remove News Item</div>
 
@@ -136,10 +283,21 @@ function AdminPage() {
           {pendingDelete ? (
             <button
               className="add-news-button"
-              onClick={() => {
-                setNewsList(
-                  newsList.filter((n) => n.page !== pendingDelete.page)
-                );
+              onClick={async () => {
+                const { error } = await supabase
+                  .from("news")
+                  .delete()
+                  .eq("page", pendingDelete.page);
+
+                if (error) {
+                  alert("Poisto epäonnistui 😢");
+                  console.error(error);
+                } else {
+                  alert("Poistettu ✅");
+                  setPendingDelete(null);
+                  setDeletePageInput("");
+                  fetchNews(); // Update local list
+                }
                 setPendingDelete(null);
                 setDeletePageInput("");
               }}

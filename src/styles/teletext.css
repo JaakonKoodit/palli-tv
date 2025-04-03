@@ -1,24 +1,59 @@
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 💥 Prevent scrolling */
+}
+@media (max-width: 768px) {
+  .category-column,
+  .event-column {
+    width: 100%; /* ✅ Stack full width on small screens */
+    max-height: 50vh; /* Optionally limit height per section */
+  }
+}
+
+.fullscreen-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto; /* Prevent scroll here */
+}
+
+.teletext-box {
+  padding: 1rem 1.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden; /* prevent sideways scroll */
+  overflow-y: auto; /* allow vertical scroll if really needed */
+  background-color: black;
+  padding: 0.5rem 0rem;
+  margin-bottom: 1rem;
+}
+
 body {
   background: black;
   color: white;
   font-family: "VT323", monospace;
   font-size: 2rem;
   margin: 0;
-  padding: 1rem;
+  padding: 0rem;
 }
 
-.teletext-box {
-  background-color: black;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
+.teletext-box p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .headline {
-  color: yellow;
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
   font-weight: bold;
-  margin-bottom: 0.5rem;
 }
-
 .page-input {
   font-size: 2rem;
   width: 8ch;
@@ -51,7 +86,7 @@ body {
 .header-bar {
   background-color: #0033cc; /* Yle-style blue */
   color: white;
-  font-size: 2.5rem;
+  font-size: 4rem;
   font-weight: bold;
   padding: 0.5rem 1rem;
   text-transform: uppercase;
@@ -73,10 +108,16 @@ body {
 .pinned-headline {
   background-color: yellow;
   color: black;
-  font-size: 2.2rem;
+  font-size: 3.2rem;
   font-weight: bold;
   padding: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.latest-entry {
+  color: cyan;
+  font-size: 2.4rem;
+  line-height: 1;
 }
 
 .add-news-button {
@@ -106,4 +147,120 @@ body {
   font-family: "VT323", monospace;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.clickable {
+  cursor: pointer;
+}
+.category-event-box {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: stretch; /* 💥 Ensures both columns match in height */
+  gap: 1 rem;
+  flex-wrap: wrap;
+}
+
+.category-column {
+  background-color: blue;
+  color: white;
+  padding: 0rem;
+}
+
+.headline {
+  font-weight: bold;
+  color: magenta;
+  margin-bottom: 0.5rem;
+}
+.headline-event {
+  font-weight: bold;
+  color: #0000ff;
+  margin-bottom: 0.5rem;
+}
+
+.page-code {
+  color: yellow;
+  font-weight: bold;
+}
+
+.clickable-entry {
+  font-size: 2rem;
+  line-height: 1.8;
+  cursor: pointer;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.event-entry {
+  color: cyan;
+}
+
+.no-events {
+  color: gray;
+  font-style: italic;
+}
+
+.category-column,
+.event-column {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.category-column .clickable-entry {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 3rem;
+  line-height: 1;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.event-column .clickable-entry {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  line-height: 1;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.no-events {
+  color: black;
+  background-color: yellow;
+  padding: 0.25rem;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.category-column {
+  background-color: #0000ff; /* bright blue */
+  color: white;
+}
+
+.event-column {
+  background-color: #ff00ff; /* magenta */
+  color: white;
+}
+
+.page-input-wide {
+  font-size: 1.4rem;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+  width: 8rem;
+}
+
+.edit-button {
+  font-size: 1.4rem;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  background-color: yellow;
+  border: 2px solid black;
+  cursor: pointer;
 }

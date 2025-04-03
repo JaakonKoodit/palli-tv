@@ -1,0 +1,25 @@
+[
+  {
+    "page": 100,
+    "label": "Etusivu",
+    "hidden": true
+  },
+  {
+    "page": 110,
+    "label": "Sää"
+  },
+  {
+    "page": 120,
+    "label": "Kalenteri",
+    "hidden": false
+  },
+  {
+    "page": 200,
+    "label": "Urheilu"
+  },
+  {
+    "page": 765,
+    "label": "Asetukset (Admin)",
+    "hidden": true
+  }
+]

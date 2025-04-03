@@ -9,7 +9,7 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div>
+    <div className="fullscreen-wrapper">
       <TeletextFrame />
     </div>
   );
