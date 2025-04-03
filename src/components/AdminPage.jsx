@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import specialPages from "../data/specialPages.json";
+import specialPages from "../data/specialpages.json";
 import { supabase } from "../lib/supabase";
 
 const getTodayDate = () => {
