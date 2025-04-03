@@ -1,0 +1,109 @@
+body {
+  background: black;
+  color: white;
+  font-family: "VT323", monospace;
+  font-size: 2rem;
+  margin: 0;
+  padding: 1rem;
+}
+
+.teletext-box {
+  background-color: black;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.headline {
+  color: yellow;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.page-input {
+  font-size: 2rem;
+  width: 8ch;
+  text-align: center;
+  padding: 0.4rem 0.6rem;
+  margin-top: 1rem;
+
+  background-color: #00ffff; /* Cyan background */
+  color: black;
+  border: none;
+
+  font-family: "VT323", monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+
+  display: inline-block; /* ← switch from block */
+  margin-left: 0; /* ← aligns left now */
+}
+
+.page-indicator {
+  margin-top: 0.5rem;
+  color: yellow;
+  font-size: 1.25rem;
+}
+
+.link-text {
+  color: cyan;
+}
+
+.header-bar {
+  background-color: #0033cc; /* Yle-style blue */
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.category-box {
+  background-color: #00ff00; /* Yle-style bright green */
+  color: black;
+  font-weight: bold;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.page-code {
+  color: blue;
+}
+
+.pinned-headline {
+  background-color: yellow;
+  color: black;
+  font-size: 2.2rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.add-news-button {
+  font-size: 1.5rem;
+  font-family: "VT323", monospace;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.add-news-button:hover {
+  background-color: magenta;
+}
+
+.page-input-wide {
+  font-size: 2rem;
+  width: 20ch; /* wider than the regular 8ch */
+  text-align: center;
+  padding: 0.4rem 0.6rem;
+  margin-top: 1rem;
+  background-color: #00ffff;
+  color: black;
+  border: none;
+  font-family: "VT323", monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+}

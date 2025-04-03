@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "page": 101,
+    "title": "🎉 Game Night Friday!",
+    "body": "Bring snacks and board games.",
+    "pinned": true,
+    "date": "2025-04-03"
+  },
+  {
+    "id": 2,
+    "page": 102,
+    "title": "🎂 Elli's Birthday Next Week",
+    "body": "Surprise party plans forming.",
+    "date": "2025-04-02"
+  },
+  {
+    "id": 3,
+    "page": 103,
+    "title": "📣 Movie Poll Open",
+    "body": "Vote before Thursday.",
+    "date": "2025-04-01"
+  }
+]
